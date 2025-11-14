@@ -43,16 +43,16 @@ const Navbar = () => {
             </li>
             <li className="nav-item">
               <Link 
-                to="/all-reviews" 
-                className={`nav-link ${isActive('/all-reviews') ? 'active' : ''}`}
+                to="/reviews" 
+                className={`nav-link ${isActive('/reviews') ? 'active' : ''}`}
               >
                 All Reviews
               </Link>
             </li>
             <li className="nav-item">
               <Link 
-                to="/edit-profile" 
-                className={`nav-link ${isActive('/edit-profile') ? 'active' : ''}`}
+                to="/profile" 
+                className={`nav-link ${isActive('/profile') ? 'active' : ''}`}
               >
                 Edit Profile
               </Link>
