@@ -24,9 +24,79 @@ exports.addReview = async (req, res) => {
     }
 };
 
+exports.getAllReviews = async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT r.*, m.title, u.first_name, u.last_name 
+            FROM reviews r 
+            JOIN movies m ON r.movie_id = m.movie_id 
+            JOIN users u ON r.user_id = u.user_id
+        `);
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 
-exports.getReviews = async (req, res) => {
-    const movie_id = req.params.movie_id;
-    const [rows] = await pool.query("SELECT * FROM reviews WHERE movie_id = ?", [movie_id]);
-    res.json(rows);
+exports.getMyReviews = async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT r.*, m.title 
+            FROM reviews r 
+            JOIN movies m ON r.movie_id = m.movie_id 
+            WHERE r.user_id = ?
+        `, [req.user.user_id]);
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.getReview = async (req, res) => {
+    try {
+        const reviewId = req.params.id;
+        const [rows] = await pool.query(`
+            SELECT r.*, m.title 
+            FROM reviews r 
+            JOIN movies m ON r.movie_id = m.movie_id 
+            WHERE r.review_id = ? AND r.user_id = ?
+        `, [reviewId, req.user.user_id]);
+        
+        if (rows.length === 0) {
+            return res.status(404).json({ message: "Review not found" });
+        }
+        
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateReview = async (req, res) => {
+    try {
+        const { review, rating } = req.body;
+        const reviewId = req.params.id;
+        
+        await pool.query(
+            "UPDATE reviews SET review = ?, rating = ? WHERE review_id = ? AND user_id = ?",
+            [review, rating, reviewId, req.user.user_id]
+        );
+        
+        res.json({ message: "Review updated" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteReview = async (req, res) => {
+    try {
+        const reviewId = req.params.id;
+        
+        await pool.query("DELETE FROM reviews WHERE review_id = ? AND user_id = ?", 
+            [reviewId, req.user.user_id]);
+        
+        res.json({ message: "Review deleted" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };

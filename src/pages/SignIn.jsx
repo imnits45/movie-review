@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useAuth } from '../providers/AuthProvider'
+import { userService } from '../services/users'
 import './SignIn.css'
 
 function SignIn() {
@@ -22,19 +23,14 @@ function SignIn() {
 
     setLoading(true)
     try {
-      // Mock authentication - accept any email/password
-      const mockUser = {
-        id: 1,
-        email: email,
-        name: 'Demo User'
-      }
-      const mockToken = 'demo-token-' + Date.now()
+      const response = await userService.signIn({ email, password })
+      const { token, user } = response.data
       
-      login(mockUser, mockToken)
+      login(user, token)
       toast.success('Sign in successful!')
       navigate('/home')
     } catch (error) {
-      toast.error('Sign in failed. Please try again.')
+      toast.error(error.response?.data?.message || 'Sign in failed. Please try again.')
     } finally {
       setLoading(false)
     }
