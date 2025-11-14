@@ -14,3 +14,37 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+Create table users(
+     user_id INT AUTO_INCREMENT PRIMARY KEY,
+     first_name VARCHAR(50) NOT NULL,
+     last_name VARCHAR(50) NOT NULL,
+     email VARCHAR(100) NOT NULL UNIQUE,
+     password VARCHAR(255) NOT NULL,
+     mobile VARCHAR(50),
+     birth DATE
+     );
+
+CREATE TABLE reviews(
+review_id INT PRIMARY KEY,
+movie_id INT,
+review VARCHAR(100) NOT NULL,
+rating INT,
+user_id int,
+modified_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (user_id) REFERENCES users(user_id),
+FOREIGN KEY (movie_id) REFERENCES movies(movie_id)
+);
+
+CREATE TABLE shares(
+review_id INT,
+user_id INT,
+FOREIGN KEY (user_id) REFERENCES users(user_id),
+FOREIGN KEY (review_id) REFERENCES reviews(review_id)
+);
+
+CREATE TABLE movies(
+movie_id INT PRIMARY KEY,
+title VARCHAR(100) NOT NULL,
+release_date DATE
+);
