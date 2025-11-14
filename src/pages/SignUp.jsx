@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { userService } from '../services/users'
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -38,11 +39,19 @@ function SignUp() {
 
     setLoading(true)
     try {
-      // Mock sign up - always succeeds
+      await userService.signUp({
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        mobile: formData.mobile,
+        birth: formData.dateOfBirth,
+        password: formData.password
+      })
+      
       toast.success('Account created successfully! Please sign in.')
       navigate('/signin')
     } catch (error) {
-      toast.error('Sign up failed. Please try again.')
+      toast.error(error.response?.data?.error || 'Sign up failed. Please try again.')
     } finally {
       setLoading(false)
     }

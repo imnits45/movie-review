@@ -1,17 +1,44 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { userService } from '../services/users'
+import { useAuth } from '../providers/AuthProvider'
 
 function EditProfile() {
   const [formData, setFormData] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john@example.com',
-    mobile: '+1234567890',
-    dateOfBirth: '1990-01-01'
+    first_name: '',
+    last_name: '',
+    email: '',
+    mobile: '',
+    birth: ''
   })
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  
   const navigate = useNavigate()
+  const { setUser } = useAuth()
+
+  useEffect(() => {
+    fetchProfile()
+  }, [])
+
+  const fetchProfile = async () => {
+    try {
+      const response = await userService.getProfile()
+      const profile = response.data
+      setFormData({
+        first_name: profile.first_name || '',
+        last_name: profile.last_name || '',
+        email: profile.email || '',
+        mobile: profile.mobile || '',
+        birth: profile.birth ? profile.birth.split('T')[0] : ''
+      })
+    } catch (error) {
+      toast.error('Failed to fetch profile')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleChange = (e) => {
     setFormData({
@@ -23,20 +50,38 @@ function EditProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     
-    if (!formData.firstName || !formData.lastName || !formData.email) {
-      toast.error('Please fill in all required fields')
+    if (!formData.first_name || !formData.last_name) {
+      toast.error('First name and last name are required')
       return
     }
 
-    setLoading(true)
+    setSaving(true)
     try {
+      await userService.updateProfile({
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        mobile: formData.mobile,
+        birth: formData.birth
+      })
+      
+      // Update user in context
+      setUser(prev => ({
+        ...prev,
+        first_name: formData.first_name,
+        last_name: formData.last_name
+      }))
+      
       toast.success('Profile updated successfully!')
       navigate('/home')
     } catch (error) {
-      toast.error('Failed to update profile')
+      toast.error(error.response?.data?.message || 'Failed to update profile')
     } finally {
-      setLoading(false)
+      setSaving(false)
     }
+  }
+
+  if (loading) {
+    return <div className="container"><div className="loading">Loading profile...</div></div>
   }
 
   return (
@@ -46,24 +91,24 @@ function EditProfile() {
       <form onSubmit={handleSubmit} style={{ maxWidth: '800px' }}>
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="firstName">First Name</label>
+            <label htmlFor="first_name">First Name</label>
             <input
               type="text"
-              id="firstName"
-              name="firstName"
-              value={formData.firstName}
+              id="first_name"
+              name="first_name"
+              value={formData.first_name}
               onChange={handleChange}
               required
             />
           </div>
           
           <div className="form-group">
-            <label htmlFor="lastName">Last Name</label>
+            <label htmlFor="last_name">Last Name</label>
             <input
               type="text"
-              id="lastName"
-              name="lastName"
-              value={formData.lastName}
+              id="last_name"
+              name="last_name"
+              value={formData.last_name}
               onChange={handleChange}
               required
             />
@@ -77,9 +122,10 @@ function EditProfile() {
             id="email"
             name="email"
             value={formData.email}
-            onChange={handleChange}
-            required
+            disabled
+            style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
           />
+          <small className="form-text">Email cannot be changed</small>
         </div>
         
         <div className="form-group">
@@ -94,19 +140,28 @@ function EditProfile() {
         </div>
         
         <div className="form-group">
-          <label htmlFor="dateOfBirth">Date of Birth</label>
+          <label htmlFor="birth">Date of Birth</label>
           <input
             type="date"
-            id="dateOfBirth"
-            name="dateOfBirth"
-            value={formData.dateOfBirth}
+            id="birth"
+            name="birth"
+            value={formData.birth}
             onChange={handleChange}
           />
         </div>
         
-        <button type="submit" className="btn btn-primary" disabled={loading}>
-          {loading ? 'Saving Changes...' : 'Save Changes'}
-        </button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button type="submit" className="btn btn-primary" disabled={saving}>
+            {saving ? 'Saving Changes...' : 'Save Changes'}
+          </button>
+          <button 
+            type="button" 
+            className="btn btn-secondary"
+            onClick={() => navigate('/home')}
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   )
