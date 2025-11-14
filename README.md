@@ -1,19 +1,116 @@
-# React + Vite
+# Movie Review Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based movie review application that allows users to create, manage, and share movie reviews.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- User authentication (Sign In/Sign Up)
+- Browse movies
+- Create and edit movie reviews
+- View all reviews and personal reviews
+- Share reviews with other users
+- View reviews shared by others
+- User profile management
+- Password change functionality
 
-## React Compiler
+## Project Structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```
+├── App.css
+├── App.jsx
+├── assets
+│   └── react.svg
+├── components
+│   ├── footer
+│   │   ├── Footer.css
+│   │   └── Footer.jsx
+│   ├── layout
+│   │   └── Layout.jsx
+│   └── navbar
+│       ├── Navbar.css
+│       └── Navbar.jsx
+├── index.css
+├── main.jsx
+├── pages
+│   ├── ChangePassword.jsx
+│   ├── CreateAReview.jsx
+│   ├── DeleeReview.jsx
+│   ├── DisplayAllMovies.jsx
+│   ├── DisplayAllReviews.jsx
+│   ├── DisplayMyReviews.jsx
+│   ├── DisplayReviewsSharedWithMe.jsx
+│   ├── EditProfile.jsx
+│   ├── EditReview.jsx
+│   ├── Home.jsx
+│   ├── NotFound.jsx
+│   ├── ShareReview.jsx
+│   ├── SignIn.css
+│   ├── SignIn.jsx
+│   └── SignUp.jsx
+├── providers
+│   └── AuthProvider.jsx
+├── routes
+│   └── Router.jsx
+└── services
+    └── users.js
+```
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+3. Open your browser and navigate to `http://localhost:5173`
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run lint` - Run ESLint
+- `npm run preview` - Preview production build
+
+## Technologies Used
+
+- React 19
+- React Router DOM
+- Axios for API calls
+- React Toastify for notifications
+- Vite for build tooling
+
+## Pages Overview
+
+- **SignIn/SignUp**: User authentication
+- **Home**: Dashboard with quick actions
+- **DisplayAllMovies**: Browse available movies
+- **CreateAReview**: Write new movie reviews
+- **DisplayAllReviews**: View all public reviews
+- **DisplayMyReviews**: Manage personal reviews
+- **DisplayReviewsSharedWithMe**: View reviews shared by others
+- **EditReview**: Edit existing reviews
+- **ShareReview**: Share reviews with other users
+- **EditProfile**: Update user profile
+- **ChangePassword**: Change user password
+- **NotFound**: 404 error page
+
+## API Integration
+
+The application is set up to work with a backend API. Update the API endpoints in `src/services/users.js` to match your backend implementation.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+##SQL Query
 
 create MovieDb;
 Create table users(

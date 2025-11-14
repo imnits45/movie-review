@@ -1,8 +1,17 @@
-import React from 'react'
+import './Footer.css'
 
-const Footer = () => {
+function Footer() {
   return (
-        <footer className='bg-gray-100 text-center h-20 pt-5'>All rights reserved</footer>
+    <footer className="footer">
+      <div className="footer-content">
+        <p>&copy; 2024 Movie Review App. All rights reserved.</p>
+        <div className="footer-links">
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/privacy">Privacy Policy</a>
+        </div>
+      </div>
+    </footer>
   )
 }
 
