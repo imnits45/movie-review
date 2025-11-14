@@ -112,6 +112,7 @@ The application is set up to work with a backend API. Update the API endpoints i
 
 ##SQL Query
 
+create MovieDb;
 Create table users(
      user_id INT AUTO_INCREMENT PRIMARY KEY,
      first_name VARCHAR(50) NOT NULL,
